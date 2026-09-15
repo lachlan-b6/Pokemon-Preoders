@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light">
+<meta name="theme-color" content="#faf7f1">
+<title>Pokémon Pre-order Checklist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light;
+    --bg:#faf7f1;
+    --surface:#ffffff;
+    --hairline:#e6ddc9;
+    --hairline-soft:#efe8d9;
+    --text:#2c281f;
+    --text-dim:#726b5a;
+    --text-faint:#a89f8b;
+    --gold:#b3813d;
+    --gold-soft:#eadfc4;
+    --green:#5c8a63;
+    --green-soft:#e2ede2;
+    --amber:#c07a30;
+    --amber-soft:#f6e6d2;
+  }
+  *{box-sizing:border-box;}
+  html{color-scheme:light;background:#faf7f1;}
+  html,body{margin:0;padding:0;background:var(--bg) !important;color:var(--text) !important;}
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#faf7f1;
+      --surface:#ffffff;
+      --hairline:#e6ddc9;
+      --hairline-soft:#efe8d9;
+      --text:#2c281f;
+      --text-dim:#726b5a;
+      --text-faint:#a89f8b;
+      --gold:#b3813d;
+      --gold-soft:#eadfc4;
+      --green:#5c8a63;
+      --green-soft:#e2ede2;
+      --amber:#c07a30;
+      --amber-soft:#f6e6d2;
+    }
+    html,body{background:#faf7f1 !important;color:#2c281f !important;}
+  }
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    font-variant-numeric:tabular-nums;
+    padding-bottom:60px;
+  }
+  .wrap{max-width:620px;margin:0 auto;padding:0 18px;}
+
+  header.top{padding:28px 0 18px;display:flex;justify-content:space-between;align-items:flex-start;gap:16px;}
+  .header-text{flex:1;min-width:0;}
+  .header-actions{flex:none;display:flex;gap:8px;margin-top:2px;}
+  .icon-btn{
+    width:38px;height:38px;
+    background:var(--gold);
+    color:#fff;
+    border:none;
+    border-radius:50%;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    padding:0;
+  }
+  .icon-btn svg{width:17px;height:17px;stroke:#fff;}
+  .icon-btn.copied{background:var(--green);}
+  .icon-btn.active{background:var(--text);}
+
+  .add-panel{
+    display:none;
+    margin:14px 0 0;
+    padding:14px;
+    background:var(--surface);
+    border:1px solid var(--hairline);
+    border-radius:8px;
+  }
+  .add-panel.open{display:block;}
+  .add-panel p{margin:0 0 8px;font-size:12px;color:var(--text-dim);line-height:1.5;}
+  .add-panel textarea{
+    width:100%;
+    min-height:70px;
+    background:var(--bg);
+    border:1px solid var(--hairline);
+    border-radius:6px;
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    padding:8px 10px;
+    resize:vertical;
+    outline:none;
+  }
+  .add-panel textarea:focus{border-color:var(--gold);}
+  .add-panel-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:8px;}
+  .add-panel-actions button{
+    font-family:'Inter',sans-serif;
+    font-size:12.5px;
+    font-weight:600;
+    padding:7px 14px;
+    border-radius:6px;
+    border:1px solid var(--hairline);
+    background:transparent;
+    color:var(--text-dim);
+    cursor:pointer;
+  }
+  .add-panel-actions .primary{background:var(--gold);color:#fff;border-color:var(--gold);}
+  .add-panel-msg{font-size:12px;margin-top:8px;color:var(--green);}
+  .add-panel-msg.error{color:#a3453d;}
+
+  h1{
+    font-family:'Fraunces',serif;
+    font-optical-sizing:auto;
+    font-weight:600;
+    font-size:26px;
+    letter-spacing:-0.01em;
+    margin:0 0 4px;
+    color:var(--text);
+  }
+  .sub{color:var(--text-dim);font-size:13.5px;line-height:1.5;margin:0;}
+
+  .stats{
+    display:flex;
+    margin:20px 0 4px;
+    border-top:1px solid var(--hairline);
+    border-bottom:1px solid var(--hairline);
+  }
+  .stat{flex:1;padding:14px 0;text-align:left;}
+  .stat + .stat{border-left:1px solid var(--hairline);padding-left:16px;}
+  .stat-num{font-family:'Fraunces',serif;font-weight:600;font-size:22px;color:var(--gold);display:block;line-height:1.1;}
+  .stat-label{font-size:11.5px;color:var(--text-dim);margin-top:3px;display:block;}
+
+  input[type="search"]{
+    width:100%;
+    background:var(--surface);
+    border:1px solid var(--hairline);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    font-size:14.5px;
+    padding:10px 12px;
+    border-radius:6px;
+    outline:none;
+    margin:18px 0 0;
+  }
+  input[type="search"]::placeholder{color:var(--text-faint);}
+  input[type="search"]:focus{border-color:var(--gold);}
+
+  .retailer-head{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:16px;
+    color:var(--text);
+    margin:28px 0 2px;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--hairline);
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+  }
+  .retailer-count{font-family:'Inter',sans-serif;font-weight:400;font-size:12px;color:var(--text-faint);}
+
+  .row{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    padding:14px 0;
+    border-bottom:1px solid var(--hairline-soft);
+    cursor:pointer;
+  }
+  .row:last-child{border-bottom:none;}
+
+  .check{
+    flex:none;
+    width:19px;height:19px;
+    margin-top:2px;
+    border-radius:50%;
+    border:1.5px solid var(--text-faint);
+    display:flex;align-items:center;justify-content:center;
+    background:var(--surface);
+  }
+  .check.on{background:var(--green);border-color:var(--green);}
+  .check svg.tick{width:11px;height:11px;display:none;stroke:white;}
+  .check.on svg.tick{display:block;}
+
+  .row-body{flex:1;min-width:0;}
+  .item-name{font-size:15px;color:var(--text);line-height:1.35;}
+  .item-name.received{color:var(--text-faint);text-decoration:line-through;text-decoration-color:var(--text-faint);}
+  .order-no{font-size:11px;color:var(--text-faint);margin-top:3px;font-family:'Inter',monospace;}
+  .note{font-size:12px;color:var(--amber);margin-top:3px;}
+  .note.plain{color:var(--text-dim);}
+  .note.received-note{color:var(--green);}
+
+  .empty{
+    text-align:center;
+    color:var(--text-faint);
+    font-size:13.5px;
+    padding:50px 0;
+  }
+
+  .empty-retailer{
+    padding:14px 0;
+    color:var(--text-faint);
+    font-size:13.5px;
+    font-style:italic;
+  }
+
+  footer.note-foot{
+    margin-top:36px;
+    padding-top:16px;
+    border-top:1px solid var(--hairline);
+    color:var(--text-faint);
+    font-size:11.5px;
+    line-height:1.6;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="header-text">
+      <h1>Pokémon Pre-orders</h1>
+      <p class="sub">Every pre-order from Kmart, JB Hi-Fi, EB Games and Big W, tick them off as they arrive.</p>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" id="refreshBtn" title="Copy check-in prompt" aria-label="Copy check-in prompt">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg>
+      </button>
+      <button class="icon-btn" id="addToggleBtn" title="Paste new pre-order" aria-label="Paste new pre-order">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="add-panel" id="addPanel">
+    <p>Paste Claude's reply here — one line per pre-order, formatted as<br><b>Retailer | Item | Order number | Note</b><br>Anything outside Kmart, JB Hi-Fi, EB Games or Big W lands under "Other."</p>
+    <textarea id="addInput" placeholder="Big W | 30th Celebration Sylveon ex Box | 123456 | Releases 16 Sep 2026"></textarea>
+    <div class="add-panel-actions">
+      <button id="addCancelBtn">Cancel</button>
+      <button class="primary" id="addSubmitBtn">Add to list</button>
+    </div>
+    <div class="add-panel-msg" id="addMsg" style="display:none;"></div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <input type="search" id="search" placeholder="Search…">
+
+  <div id="list"></div>
+  <div class="empty" id="emptyMsg" style="display:none;">Nothing matches that search.</div>
+
+  <footer class="note-foot">
+    Pulled from your pre-order confirmation emails.
+  </footer>
+
+</div>
+
+<script>
+const BASE_ORDERS = [
+  // Add pre-orders using the "+" button in the app — paste lines here too if you prefer editing directly.
+  // Format: {id:'unique-id', r:'Retailer', i:'Item name', o:'Order number', rel:'Note'},
+];
+
+let received = {};
+let query = '';
+const STORAGE_KEY = 'pokemon-preorders-received';
+const CUSTOM_KEY = 'pokemon-preorders-custom';
+
+function loadCustomOrders(){
+  try{
+    const raw = localStorage.getItem(CUSTOM_KEY);
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){ return []; }
+}
+
+function saveCustomOrders(list){
+  try{
+    localStorage.setItem(CUSTOM_KEY, JSON.stringify(list));
+  }catch(e){}
+}
+
+function getAllOrders(){
+  return BASE_ORDERS.concat(loadCustomOrders());
+}
+
+function loadReceived(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw) received = JSON.parse(raw);
+  }catch(e){}
+  render();
+}
+
+function toggleReceived(id){
+  received[id] = !received[id];
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(received));
+  }catch(e){}
+  render();
+}
+
+const RETAILER_ORDER = ['Kmart','JB Hi-Fi','EB Games','Big W','Other'];
+
+function retailerGroups(list, includeEmpty){
+  const groups = {};
+  for(const o of list){
+    if(!groups[o.r]) groups[o.r] = [];
+    groups[o.r].push(o);
+  }
+  const known = RETAILER_ORDER.filter(r => groups[r] || includeEmpty).map(r => ({r, items: groups[r] || []}));
+  const extra = Object.keys(groups).filter(r => !RETAILER_ORDER.includes(r)).map(r => ({r, items: groups[r]}));
+  return known.concat(extra);
+}
+
+function renderStats(){
+  const all = getAllOrders();
+  const total = all.length;
+  const inHand = all.filter(o => received[o.id]).length;
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><span class="stat-num">${total}</span><span class="stat-label">Pre-orders</span></div>
+    <div class="stat"><span class="stat-num">${total - inHand}</span><span class="stat-label">Still coming</span></div>
+    <div class="stat"><span class="stat-num">${inHand}</span><span class="stat-label">In hand</span></div>
+  `;
+}
+
+function matches(o){
+  if(query && !o.i.toLowerCase().includes(query.toLowerCase())) return false;
+  return true;
+}
+
+function renderRow(o){
+  const isReceived = !!received[o.id];
+  const noteClass = isReceived ? 'received-note' : (o.rel.startsWith('Delayed') ? '' : 'plain');
+  return `
+    <div class="row" data-id="${o.id}">
+      <div class="row-body">
+        <div class="item-name ${isReceived?'received':''}">${o.i}</div>
+        ${o.o ? `<div class="order-no">Order ${o.o}</div>` : ''}
+        <div class="note ${noteClass}">${isReceived ? 'Received' : o.rel}</div>
+      </div>
+      <div class="check ${isReceived?'on':''}" data-toggle="${o.id}">
+        <svg class="tick" viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+    </div>
+  `;
+}
+
+function renderList(){
+  const filtered = getAllOrders().filter(matches);
+  const list = document.getElementById('list');
+  const empty = document.getElementById('emptyMsg');
+
+  if(filtered.length === 0){
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  let html = '';
+  const groups = retailerGroups(filtered, !query);
+  for(const g of groups){
+    if(g.items.length === 0){
+      html += `<div class="retailer-head">${g.r} <span class="retailer-count">0 pre-orders</span></div>`;
+      html += `<div class="empty-retailer">No pre-orders from ${g.r} yet.</div>`;
+      continue;
+    }
+    const awaiting = g.items.filter(o => !received[o.id]).length;
+    html += `<div class="retailer-head">${g.r} <span class="retailer-count">${g.items.length} pre-order${g.items.length===1?'':'s'}${awaiting ? `, ${awaiting} still coming` : ' — all in hand'}</span></div>`;
+    for(const o of g.items){
+      html += renderRow(o);
+    }
+  }
+  list.innerHTML = html;
+
+  list.querySelectorAll('.row').forEach(el => {
+    el.onclick = () => toggleReceived(el.dataset.id);
+  });
+}
+
+function render(){
+  renderStats();
+  renderList();
+}
+
+document.getElementById('search').addEventListener('input', (e) => {
+  query = e.target.value;
+  render();
+});
+
+const refreshBtn = document.getElementById('refreshBtn');
+refreshBtn.addEventListener('click', async () => {
+  const prompt = "Check my Kmart, JB Hi-Fi, EB Games and Big W emails for any new Pokémon pre-orders since last time. For each new one, reply with one line formatted exactly as: Retailer | Item name | Order number | Note (e.g. release date) — so I can paste it straight into my tracker.";
+  try{
+    await navigator.clipboard.writeText(prompt);
+    refreshBtn.classList.add('copied');
+    refreshBtn.title = 'Copied — paste in chat';
+  }catch(e){
+    refreshBtn.title = 'Copy failed — long-press to copy';
+  }
+  setTimeout(() => {
+    refreshBtn.classList.remove('copied');
+    refreshBtn.title = 'Copy check-in prompt';
+  }, 2500);
+});
+
+const addToggleBtn = document.getElementById('addToggleBtn');
+const addPanel = document.getElementById('addPanel');
+const addInput = document.getElementById('addInput');
+const addMsg = document.getElementById('addMsg');
+
+addToggleBtn.addEventListener('click', () => {
+  const open = addPanel.classList.toggle('open');
+  addToggleBtn.classList.toggle('active', open);
+  if(open) addInput.focus();
+});
+
+document.getElementById('addCancelBtn').addEventListener('click', () => {
+  addPanel.classList.remove('open');
+  addToggleBtn.classList.remove('active');
+  addInput.value = '';
+  addMsg.style.display = 'none';
+});
+
+document.getElementById('addSubmitBtn').addEventListener('click', () => {
+  const lines = addInput.value.split('\n').map(l => l.trim()).filter(Boolean);
+  if(lines.length === 0){
+    addMsg.textContent = 'Paste at least one line first.';
+    addMsg.className = 'add-panel-msg error';
+    addMsg.style.display = 'block';
+    return;
+  }
+  const custom = loadCustomOrders();
+  const knownRetailers = ['Kmart','JB Hi-Fi','EB Games','Big W'];
+  let added = 0;
+  for(const line of lines){
+    const parts = line.split('|').map(p => p.trim());
+    if(parts.length < 2 || !parts[0] || !parts[1]) continue;
+    let [r, i, o, rel] = parts;
+    const matchKnown = knownRetailers.find(k => k.toLowerCase() === r.toLowerCase());
+    if(matchKnown){
+      r = matchKnown;
+    } else {
+      rel = rel ? `${r} — ${rel}` : `From ${r}`;
+      r = 'Other';
+    }
+    custom.push({
+      id: 'c' + Date.now() + '-' + added,
+      r, i,
+      o: o || '',
+      rel: rel || 'Pre-ordered'
+    });
+    added++;
+  }
+  if(added === 0){
+    addMsg.textContent = "Couldn't read that — use Retailer | Item | Order number | Note, one per line.";
+    addMsg.className = 'add-panel-msg error';
+    addMsg.style.display = 'block';
+    return;
+  }
+  saveCustomOrders(custom);
+  addInput.value = '';
+  addMsg.textContent = `Added ${added} pre-order${added===1?'':'s'}.`;
+  addMsg.className = 'add-panel-msg';
+  addMsg.style.display = 'block';
+  render();
+  setTimeout(() => {
+    addPanel.classList.remove('open');
+    addToggleBtn.classList.remove('active');
+    addMsg.style.display = 'none';
+  }, 1400);
+});
+
+loadReceived();
+</script>
+</body>
+</html>
