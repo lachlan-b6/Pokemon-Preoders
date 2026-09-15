@@ -1,0 +1,15 @@
+{
+  "name": "Pokémon Pre-orders",
+  "short_name": "Pokémon Pre-orders",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#faf7f1",
+  "theme_color": "#faf7f1",
+  "icons": [
+    {
+      "src": "icon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
